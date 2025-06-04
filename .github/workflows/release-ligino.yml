@@ -19,10 +19,9 @@ jobs:
         run: echo "VERSION=${GITHUB_REF#refs/tags/LIG_ino@}" >> $GITHUB_ENV
 
       - name: Validate Arduino library
-        uses: arduino/arduino-cli-action@v1
+        uses: arduino/arduino-lint-action@v2
         with:
-          command: lib
-          args: validate --library-path LIG_ino
+          recursive: true
 
       - name: Zip LIG_ino folder for release
         run: |
