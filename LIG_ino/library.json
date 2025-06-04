@@ -1,0 +1,30 @@
+{
+  "name": "LIG_ino",
+  "version": "0.0.1-beta",
+  "description": "Little I2C Gateway: use any Arduino as a USB-to-I2C bridge.",
+  "keywords": [
+    "i2c",
+    "serial",
+    "usb",
+    "gateway",
+    "debug",
+    "bridge"
+  ],
+  "authors": [
+    {
+      "name": "Romain Colombo",
+      "email": "7079421+aircey@users.noreply.github.com",
+      "maintainer": true
+    }
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/aircey/lig-i2c-gateway"
+  },
+  "license": "MIT",
+  "frameworks": ["arduino"],
+  "platforms": ["atmelavr", "espressif32", "espressif8266", "ststm32", "nordicnrf52", "infineonxmc", "teensy", "microchippic32"],
+  "build": {
+    "includeDir": "src"
+  }
+}

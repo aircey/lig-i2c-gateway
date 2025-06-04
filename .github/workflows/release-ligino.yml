@@ -1,0 +1,39 @@
+name: Release LIG_ino
+
+on:
+  push:
+    tags:
+      - 'LIG_ino@*'
+
+jobs:
+  release:
+    name: Create GitHub Release for LIG_ino
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Extract version from tag
+        id: extract
+        run: echo "VERSION=${GITHUB_REF#refs/tags/LIG_ino@}" >> $GITHUB_ENV
+
+      - name: Validate Arduino library
+        uses: arduino/arduino-cli-action@v1
+        with:
+          command: lib
+          args: validate --library-path LIG_ino
+
+      - name: Zip LIG_ino folder for release
+        run: |
+          cd LIG_ino
+          zip -r ../LIG_ino-${{ env.VERSION }}.zip .
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          name: LIG_ino v${{ env.VERSION }}
+          tag_name: LIG_ino@${{ env.VERSION }}
+          files: LIG_ino-${{ env.VERSION }}.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
