@@ -26,6 +26,7 @@ protected:
     void lineProcess();
     int lineParseHexAtPosition(int pos);
     void lineProcessEnd();
+    void lineBufferReset();
 
     void printError();
     void printAddress(int addr);

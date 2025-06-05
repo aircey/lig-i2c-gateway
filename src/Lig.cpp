@@ -10,9 +10,7 @@ void LigGateway::begin(HardwareSerial &serial, TwoWire &wire)
 {
     this->serial = &serial;
     this->wire = &wire;
-    this->ipos = 0;
-    this->lineComplete = false;
-    this->lineBuffer[0] = 0;
+    lineBufferReset();
 }
 
 void LigGateway::process()
@@ -41,7 +39,7 @@ void LigGateway::lineRead()
             // Discard the rest of the line when buffer is full
             if (inChar == '\n' || inChar == '\0')
             {
-                this->ipos = 0;
+                this->lineBufferReset();
             }
         }
         else
@@ -177,10 +175,16 @@ int LigGateway::lineParseHexAtPosition(int pos)
 void LigGateway::lineProcessEnd()
 {
     this->serial->println("");
+    this->lineBufferReset();
+}
+
+void LigGateway::lineBufferReset()
+{
     this->lineComplete = false;
     this->ipos = 0;
     this->lineBuffer[0] = 0;
 }
+
 
 void LigGateway::printError()
 {
