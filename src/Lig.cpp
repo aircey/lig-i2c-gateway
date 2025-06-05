@@ -66,7 +66,7 @@ void LigGateway::lineProcess()
     int val = -1;
     int xpos = 0;
     int len = -1;
-    boolean ended = false;
+    bool ended = false;
 
     this->printCommand();
 
@@ -123,7 +123,7 @@ void LigGateway::lineProcess()
             {
                 val = this->lineParseHexAtPosition(xpos);
                 xpos += 2;
-                
+
                 if (val == -1)
                 {
                     // We should cancel the transmission if we get an error,

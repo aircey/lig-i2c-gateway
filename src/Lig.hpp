@@ -20,7 +20,7 @@ protected:
     TwoWire *wire = &Wire;
     char lineBuffer[LIG_BUFFER_SIZE];
     uint8_t ipos = 0;
-    boolean lineComplete = false;
+    bool lineComplete = false;
 
     void lineRead();
     void lineProcess();
