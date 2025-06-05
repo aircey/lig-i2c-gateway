@@ -1,12 +1,15 @@
-#include "LIG.hpp"
+#include "Lig.hpp"
 
-LIG::LIG(HardwareSerial& serial) : _serial(serial) {}
+LigGateway::LigGateway() {}
 
-void LIG::begin() {
-    _serial.begin(115200);
-    _serial.println("LIGino ready.");
+void LigGateway::begin(HardwareSerial& serial, TwoWire& wire) {
+    _serial = serial;
+    _wire = wire;
+    _serial.println("LIG ready.");
 }
 
-void LIG::hello() {
-    _serial.println("Hello from LIG_ino!");
+void LigGateway::hello() {
+    _serial.println("Hello from LIG!");
 }
+
+LigGateway Lig = LigGateway();

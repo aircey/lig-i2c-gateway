@@ -1,10 +1,18 @@
-#include <LIG.hpp>
-
-LIG i2c_gw;
+#include <Lig.hpp>
 
 void setup() {
-    i2c_gw.begin();
-    i2c_gw.hello();
+
+    // Setup Serial
+    Serial.begin(115200);
+
+    // Setup I2C with Wire
+    Wire.begin(21, 22);
+    
+    // Setup LIG using Serial and Wire
+    Lig.begin(Serial, Wire);
+
+    // Call hello for testing
+    Lig.hello();
 }
 
 void loop() {

@@ -2,13 +2,16 @@
 
 #include <Arduino.h>
 
-class LIG {
+class LigGateway {
 public:
-    LIG(HardwareSerial& serial = Serial);
+    LigGateway();
 
-    void begin();
+    void begin(HardwareSerial& serial = Serial, TwoWire& wire = Wire);
     void hello();
     
 private:
     HardwareSerial& _serial;
+    TwoWire& _wire;
 };
+
+extern LigGateway Lig;
