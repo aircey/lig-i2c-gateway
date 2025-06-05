@@ -3,7 +3,7 @@ name: Release LIG Arduino Library
 on:
   push:
     tags:
-      - 'LIG@*'
+      - 'v*'
 
 permissions:
   contents: write
@@ -19,22 +19,20 @@ jobs:
 
       - name: Extract version from tag
         id: extract
-        run: echo "VERSION=${GITHUB_REF#refs/tags/LIG@}" >> $GITHUB_ENV
+        run: echo "VERSION=${GITHUB_REF#refs/tags/v}" >> $GITHUB_ENV
 
       - name: Validate Arduino library
         uses: arduino/arduino-lint-action@v2
-        with:
-          recursive: true
 
-      - name: Zip LIG Arduino Library folder for release
-        run: |
-          zip -r ../LIG-${{ env.VERSION }}.zip .
+      # - name: Zip LIG Arduino Library folder for release
+      #   run: |
+      #     zip -r ../LIG-v${{ env.VERSION }}.zip .
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
-          name: LIG Arduino Library v${{ env.VERSION }}
-          tag_name: LIG@${{ env.VERSION }}
-          files: LIG-${{ env.VERSION }}.zip
+          name: LIG v${{ env.VERSION }}
+          # tag_name: v${{ env.VERSION }}
+          # files: LIG-v${{ env.VERSION }}.zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
