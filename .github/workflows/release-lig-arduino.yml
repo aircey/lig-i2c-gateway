@@ -23,6 +23,8 @@ jobs:
 
       - name: Validate Arduino library
         uses: arduino/arduino-lint-action@v2
+        with:
+          library-manager: update
 
       # - name: Zip LIG Arduino Library folder for release
       #   run: |
