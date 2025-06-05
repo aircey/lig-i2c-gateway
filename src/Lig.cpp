@@ -1,7 +1,7 @@
 #include "Lig.hpp"
 
-static char output[3];
-static int parseHex(char *g);
+static char hexConvBuf[3];
+static int parseHex(char *str);
 static char *toHex(int i);
 
 LigGateway::LigGateway() {}
@@ -135,7 +135,7 @@ void LigGateway::lineProcess()
                     this->printError();
                     break;
                 }
-                
+
                 this->wire->write(val);
                 this->printHexVal(val);
             }
@@ -231,11 +231,11 @@ void LigGateway::printCommand()
 
 LigGateway Lig = LigGateway();
 
-static int parseHex(char *g)
+static int parseHex(char *str)
 {
     uint8_t a, b;
-    a = g[0];
-    b = g[1];
+    a = str[0];
+    b = str[1];
     if (a > 'f')
         return -1;
     if (a < '0')
@@ -275,14 +275,14 @@ static int parseHex(char *g)
 
 static char *toHex(int i)
 {
-    output[0] = i / 16;
-    output[1] = i % 16;
-    output[0] += '0';
-    output[1] += '0';
-    if (output[0] > '9')
-        output[0] += 7;
-    if (output[1] > '9')
-        output[1] += 7;
-    output[2] = 0;
-    return output;
+    hexConvBuf[0] = i / 16;
+    hexConvBuf[1] = i % 16;
+    hexConvBuf[0] += '0';
+    hexConvBuf[1] += '0';
+    if (hexConvBuf[0] > '9')
+        hexConvBuf[0] += 7;
+    if (hexConvBuf[1] > '9')
+        hexConvBuf[1] += 7;
+    hexConvBuf[2] = 0;
+    return hexConvBuf;
 }
