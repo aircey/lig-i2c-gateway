@@ -39,14 +39,14 @@ void LigGateway::lineRead()
         if (this->ipos == LIG_BUFFER_SIZE - 1)
         {
             // Discard the rest of the line when buffer is full
-            if (inChar == '\n' || inChar == 0)
+            if (inChar == '\n' || inChar == '\0')
             {
                 this->ipos = 0;
             }
         }
         else
         {
-            if (inChar == '\n' || inChar == 0)
+            if (inChar == '\n' || inChar == '\0')
             {
                 this->lineComplete = true;
             }
@@ -54,7 +54,7 @@ void LigGateway::lineRead()
             {
                 this->lineBuffer[this->ipos] = inChar;
                 this->ipos++;
-                this->lineBuffer[ipos] = 0; // Null-terminate the string
+                this->lineBuffer[this->ipos] = 0; // Null-terminate the string
             }
         }
     }
@@ -90,7 +90,7 @@ void LigGateway::lineProcess()
 
         while (1)
         {
-            if (this->lineBuffer[xpos] == 0) // end of command
+            if (this->lineBuffer[xpos] == '\0') // end of command
             {
                 this->wire->endTransmission(true);
                 this->printEnd();
@@ -233,6 +233,11 @@ LigGateway Lig = LigGateway();
 
 static int parseHex(char *str)
 {
+    if (str == nullptr || str[0] == '\0' || str[1] == '\0')
+    {
+        return -1; // Invalid input
+    }
+
     uint8_t a, b;
     a = str[0];
     b = str[1];
