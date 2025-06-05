@@ -123,13 +123,19 @@ void LigGateway::lineProcess()
             {
                 val = this->lineParseHexAtPosition(xpos);
                 xpos += 2;
+                
                 if (val == -1)
                 {
-                    this->wire->flush(); // flush the wire buffer
+                    // We should cancel the transmission if we get an error,
+                    // but flush() is not well implemented on some Arduino ports
+                    // so we just end the transmission whitout cancelling it...
+                    // this->wire->flush();
+
                     this->wire->endTransmission(true);
                     this->printError();
                     break;
                 }
+                
                 this->wire->write(val);
                 this->printHexVal(val);
             }
