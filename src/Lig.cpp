@@ -8,8 +8,8 @@ LigGateway::LigGateway() {}
 
 void LigGateway::begin(HardwareSerial &serial, TwoWire &wire)
 {
-    this->serial = serial;
-    this->wire = wire;
+    this->serial = &serial;
+    this->wire = &wire;
     this->ipos = 0;
     this->lineComplete = false;
     this->lineBuffer[0] = 0;
@@ -27,9 +27,9 @@ void LigGateway::process()
 
 void LigGateway::lineRead()
 {
-    while (!this->lineComplete && this->serial.available())
+    while (!this->lineComplete && this->serial->available())
     {
-        char inChar = (char)this->serial.read();
+        char inChar = (char)this->serial->read();
 
         if (inChar == '\r')
         {
@@ -86,33 +86,33 @@ void LigGateway::lineProcess()
     case '.': // write mode
         this->printWriteMode();
         xpos++;
-        this->wire.beginTransmission(addr);
+        this->wire->beginTransmission(addr);
 
         while (1)
         {
             if (this->lineBuffer[xpos] == 0) // end of command
             {
-                this->wire.endTransmission(true);
+                this->wire->endTransmission(true);
                 this->printEnd();
                 break;
             }
             else if (this->lineBuffer[xpos] == '?') // read after write
             {
-                this->wire.endTransmission(false);
+                this->wire->endTransmission(false);
                 this->printReadMode();
                 xpos++;
                 len = this->lineParseHexAtPosition(xpos);
                 if (len == -1)
                 {
-                    this->wire.endTransmission(true);
+                    this->wire->endTransmission(true);
                     this->printError();
                 }
                 else
                 {
-                    this->wire.requestFrom(addr, len);
-                    while (this->wire.available())
+                    this->wire->requestFrom(addr, len);
+                    while (this->wire->available())
                     {
-                        val = this->wire.read();
+                        val = this->wire->read();
                         this->printHexVal(val);
                     }
                     this->printEnd();
@@ -125,12 +125,12 @@ void LigGateway::lineProcess()
                 xpos += 2;
                 if (val == -1)
                 {
-                    this->wire.flush(); // flush the wire buffer
-                    this->wire.endTransmission(true);
+                    this->wire->flush(); // flush the wire buffer
+                    this->wire->endTransmission(true);
                     this->printError();
                     break;
                 }
-                this->wire.write(val);
+                this->wire->write(val);
                 this->printHexVal(val);
             }
         }
@@ -146,10 +146,10 @@ void LigGateway::lineProcess()
         }
         else
         {
-            this->wire.requestFrom(addr, len);
-            while (this->wire.available())
+            this->wire->requestFrom(addr, len);
+            while (this->wire->available())
             {
-                val = this->wire.read();
+                val = this->wire->read();
                 this->printHexVal(val);
             }
             this->printEnd();
@@ -170,7 +170,7 @@ int LigGateway::lineParseHexAtPosition(int pos)
 
 void LigGateway::lineProcessEnd()
 {
-    this->serial.println("");
+    this->serial->println("");
     this->lineComplete = false;
     this->ipos = 0;
     this->lineBuffer[0] = 0;
@@ -178,49 +178,49 @@ void LigGateway::lineProcessEnd()
 
 void LigGateway::printError()
 {
-    this->serial.print("$ ");
+    this->serial->print("$ ");
 }
 
 void LigGateway::printAddress(int addr)
 {
-    this->serial.print("| ");
-    this->serial.print(toHex(addr));
-    this->serial.print(" ");
+    this->serial->print("| ");
+    this->serial->print(toHex(addr));
+    this->serial->print(" ");
 }
 
 void LigGateway::printWriteMode()
 {
-    this->serial.print(". ");
+    this->serial->print(". ");
 }
 
 void LigGateway::printReadMode()
 {
-    this->serial.print("? ");
+    this->serial->print("? ");
 }
 
 void LigGateway::printEnd()
 {
-    this->serial.print("* ");
+    this->serial->print("* ");
 }
 
 void LigGateway::printHexVal(int val)
 {
     if (val < 0 || val > 255)
     {
-        this->serial.print("$$ ");
+        this->serial->print("$$ ");
     }
     else
     {
-        this->serial.print(toHex(val));
-        this->serial.print(" ");
+        this->serial->print(toHex(val));
+        this->serial->print(" ");
     }
 }
 
 void LigGateway::printCommand()
 {
-    this->serial.print("> ");
-    this->serial.print(this->lineBuffer);
-    this->serial.print(" ");
+    this->serial->print("> ");
+    this->serial->print(this->lineBuffer);
+    this->serial->print(" ");
 }
 
 LigGateway Lig = LigGateway();

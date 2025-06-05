@@ -16,8 +16,8 @@ public:
     void process();
 
 protected:
-    HardwareSerial &serial = Serial;
-    TwoWire &wire = Wire;
+    HardwareSerial *serial = &Serial;
+    TwoWire *wire = &Wire;
     char lineBuffer[LIG_BUFFER_SIZE];
     uint8_t ipos = 0;
     boolean lineComplete = false;
