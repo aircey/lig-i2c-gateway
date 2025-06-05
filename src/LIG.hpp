@@ -2,13 +2,13 @@
 
 #include <Arduino.h>
 
-class LIGino {
+class LIG {
 public:
-    LIGino(Stream& stream = Serial);
+    LIG(HardwareSerial& serial = Serial);
 
     void begin();
     void hello();
     
 private:
-    Stream& _stream;
+    HardwareSerial& _serial;
 };
