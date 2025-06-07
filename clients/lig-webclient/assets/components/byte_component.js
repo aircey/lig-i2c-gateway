@@ -134,7 +134,8 @@ class ByteComponent extends HTMLElement {
       this.classList.add("with-error");
 
       this.e_binval.textContent = 'error';
-      this.e_intval.textContent = this.getAttribute("val"); // To do, truncate...
+      const raw_val = this.getAttribute("val").trim();
+      this.e_intval.textContent = raw_val.length > 8 ? `${raw_val.slice(0, 6)}…` : raw_val;
 
       if (this.e_hexval.parentNode == this) {
         this.removeChild(this.e_hexval);
