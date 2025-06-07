@@ -140,8 +140,8 @@ class LigResponse {
       }
 
       // Read or write flag (? or .)
-      values.trim().split(' ').map(v => v.trim()).forEach(
-        v => r.#add_value(flag, v)
+      values.trim().split(' ').forEach(
+        v => r.#add_value(flag, v.trim())
       );
     }
 
