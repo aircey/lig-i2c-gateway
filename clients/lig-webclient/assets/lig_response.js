@@ -6,7 +6,7 @@ class LigResponseError {
   static PARSE_COMPLETE_FLAG = 4;
   static GATEWAY_ADDRESS = 5;
   static GATEWAY_RESPONSE = 6;
-  static GATEWAY_UNCOMPLETE = 7;
+  static GATEWAY_INCOMPLETE = 7;
 
   #_code;
 
@@ -38,7 +38,7 @@ class LigResponseError {
         return "Gateway threw an error due to invalid request or invalid address";
       case LigResponseError.GATEWAY_RESPONSE:
         return "Gateway threw an error during read/write operation";
-      case LigResponseError.GATEWAY_UNCOMPLETE:
+      case LigResponseError.GATEWAY_INCOMPLETE:
         return "Gateway did not complete the read/write operation";
       default:
         return "Unknown error occurred";
@@ -116,10 +116,10 @@ class LigResponse {
     const addr = addr_match.groups.addr.trim();
     r.addr = addr;
 
-    let rem = addr_match.groups.rem.trim();
+    let remainder = addr_match.groups.rem.trim();
 
-    while (rem.length > 0) {
-      const values_match = LigResponse.#_regex.values.exec(rem);
+    while (remainder.length > 0) {
+      const values_match = LigResponse.#_regex.values.exec(remainder);
 
       if (!values_match) {
         r.error.set(LigResponseError.PARSE_VALUES);
@@ -128,11 +128,11 @@ class LigResponse {
 
       const flag = values_match.groups.flag.trim();
       const values = values_match.groups.values.trim();
-      rem = values_match.groups.rem.trim();
+      remainder = values_match.groups.rem.trim();
       
       // Complete flag (*)
       if (flag === "*") { 
-        if (values.length > 0 || rem.length > 0) {
+        if (values.length > 0 || remainder.length > 0) {
           r.error.set(LigResponseError.PARSE_COMPLETE_FLAG);
         }
         return r;
@@ -151,7 +151,7 @@ class LigResponse {
     }
 
     // If we reach here, we did not get a complete flag (*)
-    r.error.set(LigResponseError.GATEWAY_UNCOMPLETE);
+    r.error.set(LigResponseError.GATEWAY_INCOMPLETE);
 
     return r;
   }
