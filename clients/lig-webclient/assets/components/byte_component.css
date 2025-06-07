@@ -1,0 +1,108 @@
+.byte-component {
+  font-size: 0.7em;
+  display: inline-grid;
+  grid-template-areas:
+    "intval hexval"
+    "binval binval";
+  grid-template-columns: 5fr 5fr;
+  gap: 0.1em;
+  background-color: #cfcfcf;
+  padding: 0;
+  width: 7em;
+  margin: 0.1em;
+  border-radius: 0.3em;
+  box-shadow: inset rgba(0, 0, 0, 0.20) -2px -2em 0.2em -0.3em;
+}
+
+.byte-component.with-action {
+  grid-template-areas:
+    "intval hexval action"
+    "binval binval action";
+  grid-template-columns: 5fr 5fr 1fr;
+}
+
+.byte-component.with-error {
+  grid-template-areas:
+    "binval"
+    "intval";
+  grid-template-columns: 10fr;
+}
+
+.byte-component[draggable="true"] {
+  cursor: grab;
+}
+
+.byte-component.dragging {
+  transform: scale(1.10);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  opacity: 0.8;
+  z-index: 1000;
+}
+
+.byte-component.with-error.with-action {
+  grid-template-areas:
+    "binval action"
+    "intval action";
+  grid-template-columns: 10fr 1fr;
+}
+
+.byte-component.color-blue {
+  background-color: #0073ce;
+}
+
+.byte-component.color-blue-light {
+  background-color: #a0d5ff;
+}
+
+.byte-component.color-green {
+  background-color: #04aa6d;
+}
+
+.byte-component.color-green-light {
+  background-color: #3cffb7;
+}
+
+.byte-component.color-red {
+  background-color: #d11a3f;
+}
+
+.byte-component.color-red-light {
+  background-color: #ffc6d2;
+}
+
+.byte-component.color-black {
+  background-color: #000;
+}
+
+.byte-component.color-yellow {
+  background-color: #dec615;
+}
+
+.byte-component>div {
+  background-color: rgba(255, 255, 255, 0.8);
+  padding: 0;
+}
+
+.byte-component>div.intval {
+  grid-area: intval;
+  text-align: center;
+}
+
+.byte-component>div.hexval {
+  grid-area: hexval;
+  text-align: center;
+}
+
+.byte-component>div.binval {
+  grid-area: binval;
+  text-align: center;
+}
+
+.byte-component>div.action {
+  grid-area: action;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(255, 255, 255, 0.5);
+  cursor: pointer;
+}
