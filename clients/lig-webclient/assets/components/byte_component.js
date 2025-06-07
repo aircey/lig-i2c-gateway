@@ -60,7 +60,7 @@ class ByteComponent extends HTMLElement {
         v = parseInt(newValue);
       }
 
-      if (v != NaN && v >= 0 && v <= 255) {
+      if (!isNaN(v) && v >= 0 && v <= 255) {
         this.parsed_val = v;
         this.error = false;
       }
