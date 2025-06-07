@@ -1,0 +1,161 @@
+.log-component {
+  display: block;
+  width: 100%;
+  background-color: #f1f1f1;
+  padding: 0.2em;
+  padding-bottom: 1em;
+  border-radius: 0.5em;
+  box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+}
+
+.log-component .log-header {
+  font-size: 0.7em;
+  display: grid;
+  grid-template-areas:
+    "date address write read"
+    "message message message message";
+  grid-template-columns: minmax(auto, 13em) minmax(7em, 8em) minmax(4em, 5em) minmax(4em, 1fr);
+  gap: 0.3em;
+}
+
+.log-component .log-header .log-header-date {
+  grid-area: date;
+  background-color: #494949;
+  color: #eeeeee;
+  border-bottom-right-radius: 0.7em;
+  padding-left: 0.3em;
+}
+
+.log-component .log-header .log-header-address {
+  grid-area: address;
+  color: #555;
+}
+
+.log-component .log-header .log-header-write {
+  grid-area: write;
+  color: #2196F3;
+}
+
+.log-component .log-header .log-header-read {
+  grid-area: read;
+  color: #cfb100;
+}
+
+.log-component .log-header .log-header-message {
+  grid-area: message;
+  color: #555;
+  padding-left: 0.3em;
+}
+
+.log-component .log-header .log-header-message.with-error {
+  color: #f44336;
+  font-weight: bold;
+}
+
+.log-component .log-body {
+  display: grid;
+  grid-template-areas:
+    "left center right";
+  grid-template-columns: minmax(auto, 4em) 1fr minmax(auto, 4em);
+  padding-top: 0.5em;
+
+}
+
+.log-component .log-body .log-body-left {
+  grid-area: left;
+  text-align: center;
+}
+
+.log-component .log-body .log-body-parsed {
+  grid-area: center;
+  align-self: center;
+  display: block;
+}
+
+.log-component.show-raw .log-body .log-body-parsed {
+  display: none;
+}
+
+.log-component .log-body .log-body-raw {
+  grid-area: center;
+  align-self: center;
+  display: none;
+}
+
+.log-component.show-raw .log-body .log-body-raw {
+  display: block;
+}
+
+.log-component .log-body .log-body-raw pre {
+  margin: 0.2em;
+  background-color: #FFFFFF;
+  padding: 0.5em;
+}
+
+.log-component .log-body .log-body-right {
+  grid-area: right;
+  text-align: center;
+}
+
+.log-component .log-body .button-reuse,
+.log-component .log-body .button-raw,
+.log-component .log-body .button-clear {
+  font-size: 0.6em;
+  margin-top: 0.5em;
+  border-radius: 0.5em;
+  cursor: pointer;
+  border: 0;
+  background-color: white;
+  box-shadow: rgb(0 0 0 / 5%) 0 0 8px;
+  text-transform: uppercase;
+  transition: all 0.5s ease;
+}
+
+.log-component .log-body .button-reuse:hover,
+.log-component .log-body .button-raw:hover,
+.log-component .log-body .button-clear:hover {
+  letter-spacing: 0.2em;
+  color: hsl(0, 0%, 100%);
+}
+
+.log-component .log-body .button-reuse:active,
+.log-component .log-body .button-raw:active,
+.log-component .log-body .button-clear:active {
+  letter-spacing: 0em;
+  color: hsl(0, 0%, 100%);
+  transition: 100ms;
+}
+
+.log-component .log-body .button-reuse:hover,
+.log-component .log-body .button-reuse:active {
+  background-color: #0073ce;
+  box-shadow: #0073ce73 0px 7px 29px 0px;
+}
+
+.log-component .log-body .button-raw:hover,
+.log-component .log-body .button-raw:active {
+  background-color: #6a6a6a;
+  box-shadow: #000000cc 0px 7px 29px 0px;
+}
+
+.log-component .log-body .button-clear:hover,
+.log-component .log-body .button-clear:active {
+  background-color: #d11a3f;
+  box-shadow: #90122b 0px 7px 29px 0px;
+}
+
+.log-component byte-component.byte-address {
+  background-color: #000;
+}
+
+.log-component byte-component.byte-write {
+  background-color: #0073ce;
+}
+
+.log-component byte-component.byte-read {
+  background-color: #dec615;
+}
+
+.log-component byte-component[s-error="true"] {
+  background-color: #d11a3f;
+}
