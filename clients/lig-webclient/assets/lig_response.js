@@ -35,13 +35,13 @@ class LigResponseError {
       case LigResponseError.PARSE_COMPLETE_FLAG:
         return "Gateway response has a complete flag while having additional data";
       case LigResponseError.GATEWAY_ADDRESS:
-        return "Gateway thrown an error due to invalid request or invalid address";
+        return "Gateway threw an error due to invalid request or invalid address";
       case LigResponseError.GATEWAY_RESPONSE:
-        return "Gateway thrown an error during read/write operation";
+        return "Gateway threw an error during read/write operation";
       case LigResponseError.GATEWAY_UNCOMPLETE:
         return "Gateway did not complete the read/write operation";
       default:
-        return "Unknown error occured";
+        return "Unknown error occurred";
     }
   }
 }
@@ -69,7 +69,7 @@ class LigResponseValue {
 }
 
 class LigResponse {
-  static _regex = {
+  static #_regex = {
     cmd_ok: /^> (?<cmd>.*) [\|](?<rsp>.*)$/,
     cmd_fail: /^> (?<cmd>.*) [\$](.*)$/,
     addr: /^(?<addr>[0-9a-fA-F$]{2}) (?<rem>.*)$/,
@@ -88,12 +88,12 @@ class LigResponse {
   static parse(str) {
     const r = new LigResponse();
 
-    const cmd_ok_match = LigResponse._regex.cmd_ok.exec(str);
+    const cmd_ok_match = LigResponse.#_regex.cmd_ok.exec(str);
 
     if (!cmd_ok_match) {
       r.error.set(LigResponseError.PARSE_CMD);
 
-      const cmd_fail_match = LigResponse._regex.cmd_fail.exec(str);
+      const cmd_fail_match = LigResponse.#_regex.cmd_fail.exec(str);
       if (cmd_fail_match) {
         r.cmd = cmd_fail_match.groups.cmd.trim();
         r.error.set(LigResponseError.GATEWAY_ADDRESS);
@@ -106,7 +106,7 @@ class LigResponse {
 
     const rsp = cmd_ok_match.groups.rsp.trim();
 
-    const addr_match = LigResponse._regex.addr.exec(`${rsp} `);
+    const addr_match = LigResponse.#_regex.addr.exec(`${rsp} `);
 
     if (!addr_match) {
       r.error.set(LigResponseError.PARSE_ADDRESS);
@@ -119,7 +119,7 @@ class LigResponse {
     let rem = addr_match.groups.rem.trim();
 
     while (rem.length > 0) {
-      const values_match = LigResponse._regex.values.exec(rem);
+      const values_match = LigResponse.#_regex.values.exec(rem);
 
       if (!values_match) {
         r.error.set(LigResponseError.PARSE_VALUES);
