@@ -8,22 +8,18 @@ class LigResponseError {
   static GATEWAY_RESPONSE = 6;
   static GATEWAY_INCOMPLETE = 7;
 
-  #_code;
+  #code;
 
   constructor(code) {
-    this.#_code = code;
-  }
-
-  set(code) {
-    this.#_code = code;
+    this.#code = code;
   }
 
   equals(code) {
-    return this.#_code === code;
+    return this.#code === code;
   }
 
   get message() {
-    switch (this.#_code) {
+    switch (this.#code) {
       case LigResponseError.OK:
         return "Success";
       case LigResponseError.PARSE_CMD:
@@ -47,39 +43,39 @@ class LigResponseError {
 }
 
 class LigResponseValue {
-  #_flag;
-  #_value;
+  #flag;
+  #value;
 
   constructor(flag, value) {
-    this.#_flag = flag;
-    this.#_value = value;
+    this.#flag = flag;
+    this.#value = value;
   }
 
   get isWrite() {
-    return this.#_flag === '.';
+    return this.#flag === '.';
   }
 
   get isRead() {
-    return this.#_flag === '?';
+    return this.#flag === '?';
   }
 
   get value() {
-    return this.#_value;
+    return this.#value;
   }
 }
 
 class LigResponse {
-  static #_regex = {
+  static #regex = {
     cmd_ok: /^> (?<cmd>.*) [\|](?<rsp>.*)$/,
     cmd_fail: /^> (?<cmd>.*) [\$](.*)$/,
     addr: /^(?<addr>[0-9a-fA-F$]{2}) (?<rem>.*)$/,
     values: /^(?<flag>[\.\?\*\$])(?<values>( [0-9a-fA-F$]{2})*)(?<rem>.*)$/,
   };
 
-  error = new LigResponseError(LigResponseError.OK);
-  cmd = "";
-  addr = "";
-  values = [];
+  #error = new LigResponseError(LigResponseError.OK);
+  #cmd = "";
+  #addr = "";
+  #values = [];
 
   static is_related(str) {
     return str.trim().startsWith('>');
@@ -88,41 +84,40 @@ class LigResponse {
   static parse(str) {
     const r = new LigResponse();
 
-    const cmd_ok_match = LigResponse.#_regex.cmd_ok.exec(str);
+    const cmd_ok_match = LigResponse.#regex.cmd_ok.exec(str);
 
     if (!cmd_ok_match) {
-      r.error.set(LigResponseError.PARSE_CMD);
+      r.#set_error(LigResponseError.PARSE_CMD);
 
-      const cmd_fail_match = LigResponse.#_regex.cmd_fail.exec(str);
+      const cmd_fail_match = LigResponse.#regex.cmd_fail.exec(str);
       if (cmd_fail_match) {
-        r.cmd = cmd_fail_match.groups.cmd.trim();
-        r.error.set(LigResponseError.GATEWAY_ADDRESS);
+        r.#cmd = cmd_fail_match.groups.cmd.trim();
+        r.#set_error(LigResponseError.GATEWAY_ADDRESS);
       }
       return r;
     }
 
     const cmd = cmd_ok_match.groups.cmd.trim();
-    r.cmd = cmd;
+    r.#cmd = cmd;
 
     const rsp = cmd_ok_match.groups.rsp.trim();
 
-    const addr_match = LigResponse.#_regex.addr.exec(`${rsp} `);
+    const addr_match = LigResponse.#regex.addr.exec(`${rsp} `);
 
     if (!addr_match) {
-      r.error.set(LigResponseError.PARSE_ADDRESS);
+      r.#set_error(LigResponseError.PARSE_ADDRESS);
       return r;
     }
 
-    const addr = addr_match.groups.addr.trim();
-    r.addr = addr;
+    r.#addr = addr_match.groups.addr.trim();
 
     let remainder = addr_match.groups.rem.trim();
 
     while (remainder.length > 0) {
-      const values_match = LigResponse.#_regex.values.exec(remainder);
+      const values_match = LigResponse.#regex.values.exec(remainder);
 
       if (!values_match) {
-        r.error.set(LigResponseError.PARSE_VALUES);
+        r.#set_error(LigResponseError.PARSE_VALUES);
         return r;
       }
 
@@ -133,41 +128,61 @@ class LigResponse {
       // Complete flag (*)
       if (flag === "*") { 
         if (values.length > 0 || remainder.length > 0) {
-          r.error.set(LigResponseError.PARSE_COMPLETE_FLAG);
+          r.#set_error(LigResponseError.PARSE_COMPLETE_FLAG);
         }
         return r;
       }
 
       // Error flag ($)
       if (flag === "$") { 
-        r.error.set(LigResponseError.GATEWAY_RESPONSE);
+        r.#set_error(LigResponseError.GATEWAY_RESPONSE);
         return r;
       }
 
       // Read or write flag (? or .)
       values.trim().split(' ').map(v => v.trim()).forEach(
-        v => r.add_value(flag, v)
+        v => r.#add_value(flag, v)
       );
     }
 
     // If we reach here, we did not get a complete flag (*)
-    r.error.set(LigResponseError.GATEWAY_INCOMPLETE);
+    r.#set_error(LigResponseError.GATEWAY_INCOMPLETE);
 
     return r;
   }
 
-  add_value(flag, value) {
+  #set_error(code) {
+    this.#error = new LigResponseError(code);
+  }
+
+  #add_value(flag, value) {
     if (value) {
-      this.values.push(new LigResponseValue(flag, value));
+      this.#values.push(new LigResponseValue(flag, value));
     }
   }
 
   read_count() {
-    return this.values.filter(v => v.isRead).length;
+    return this.#values.filter(v => v.isRead).length;
   }
   
   write_count() {
-    return this.values.filter(v => v.isWrite).length;
+    return this.#values.filter(v => v.isWrite).length;
+  }
+
+  get error() {
+    return this.#error;
+  }
+
+  get cmd() {
+    return this.#cmd;
+  }
+
+  get addr() {
+    return this.#addr;
+  }
+
+  get values() {
+    return this.#values;
   }
 
 }
