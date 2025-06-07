@@ -22,14 +22,14 @@ class ByteComponent extends HTMLElement {
   attributeChangedCallback(property, oldValue, newValue) {
 
     if (property == 's-error') {
-      if (new Boolean(this.error).toString() !== newValue) {
+      if (String(this.error) !== newValue) {
         this.set_state();
       }
       return;
     }
 
     if (property == 's-parsed-val') {
-      if (parseInt(newValue) !== this.parsed_val) {
+      if (String(this.parsed_val) !== newValue) {
         this.set_state();
       }
       return;
@@ -78,7 +78,7 @@ class ByteComponent extends HTMLElement {
     this.update();
   }
 
-  // disconect component
+  // disconnect component
   disconnectedCallback() {
     this.listener_delete_detach();
   }
@@ -105,8 +105,8 @@ class ByteComponent extends HTMLElement {
   }
 
   set_state() {
-    this.setAttribute('s-error', new Boolean(this.error).toString());
-    this.setAttribute('s-parsed-val', this.parsed_val);
+    this.setAttribute('s-error', String(this.error));
+    this.setAttribute('s-parsed-val', String(this.parsed_val));
   }
 
   update() {

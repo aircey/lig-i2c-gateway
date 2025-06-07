@@ -28,7 +28,7 @@ class ByteContainer extends HTMLElement {
     }
   }
 
-  // disconect component
+  // disconnect component
   disconnectedCallback() {
     if (this.bound_dragstart) {
       this.removeEventListener('dragstart', this.bound_dragstart);
