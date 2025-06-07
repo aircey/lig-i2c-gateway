@@ -24,7 +24,7 @@ class ByteContainer extends HTMLElement {
 
     if (!this.bound_dragend) {
       this.bound_dragend = this.listener_dragend.bind(this);
-      this.addEventListener('click', this.bound_dragend);
+      this.addEventListener('dragend', this.bound_dragend);
     }
   }
 
