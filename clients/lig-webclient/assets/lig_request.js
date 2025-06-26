@@ -197,7 +197,7 @@ class LigRequest {
   }
 
   toString() {
-    const address = LigRequest.#val_convert(this.#addr);
+    const address = this.#addr.length === 0 ? '' : LigRequest.#val_convert(this.#addr);
     const writes = this.#write_bytes.map((b) => LigRequest.#val_convert(b)).join('');
     const read = this.#read ? LigRequest.#val_convert(this.#read) : '00'
 
