@@ -85,6 +85,10 @@ class LigSerial {
     this.#on_receive_cb = callback;
   }
 
+  is_connected() {
+    return this.#connected && !this.#disconnecting;
+  }
+
   async connect(baud_rate = 115200, options = {}) {
     try {
       return await this.#do_connect(baud_rate, options);
@@ -378,9 +382,11 @@ class LigSerial {
         throw new LigSerialError("Device write stream is not available.");
       }
 
+      const req = `${request.trim()}`;
+
       let next_line = this.#next_line.promise;
 
-      await this.#writer.write(new TextEncoder().encode(`${request.trim()}\n`));
+      await this.#writer.write(new TextEncoder().encode(`${req}\n`));
 
       // Add a timer to handle request timeout
       const timeout_p = new Promise((_, reject) => {
@@ -398,7 +404,7 @@ class LigSerial {
         }
 
         const response = `${line.response}`;
-        if (LigSerialMatcher.match(request, response)) {
+        if (LigSerialMatcher.match(req, response)) {
           // Expected response
           return response;
         }
