@@ -68,6 +68,11 @@ class ByteComponent extends HTMLElement {
         this.parsed_val = -1;
         this.error = true;
       }
+
+      this.dispatchEvent(new CustomEvent('byte-update', {
+        bubbles: true,
+        detail: { value: v }
+      }));
     }
 
     this.update();
@@ -135,7 +140,7 @@ class ByteComponent extends HTMLElement {
 
       this.e_binval.textContent = 'error';
       const raw_val = `${this.getAttribute("val")}`.trim();
-      this.e_intval.textContent = raw_val.length > 8 ? `${raw_val.slice(0, 6)}…` : raw_val;
+      this.e_intval.textContent = raw_val.length === 0 ? '[empty]' : raw_val.length > 8 ? `${raw_val.slice(0, 6)}…` : raw_val;
 
       if (this.e_hexval.parentNode == this) {
         this.removeChild(this.e_hexval);

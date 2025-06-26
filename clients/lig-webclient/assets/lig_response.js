@@ -84,12 +84,12 @@ class LigResponse {
   static parse(str) {
     const r = new LigResponse();
 
-    const cmd_ok_match = LigResponse.#regex.cmd_ok.exec(str);
+    const cmd_ok_match = LigResponse.#regex.cmd_ok.exec(str.trim());
 
     if (!cmd_ok_match) {
       r.#set_error(LigResponseError.PARSE_CMD);
 
-      const cmd_fail_match = LigResponse.#regex.cmd_fail.exec(str);
+      const cmd_fail_match = LigResponse.#regex.cmd_fail.exec(str.trim());
       if (cmd_fail_match) {
         r.#cmd = cmd_fail_match.groups.cmd.trim();
         r.#set_error(LigResponseError.GATEWAY_ADDRESS);
